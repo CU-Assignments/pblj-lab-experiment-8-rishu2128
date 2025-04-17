@@ -1,21 +1,35 @@
-Steps to Implement
-1. Set Up Your Environment
-- Install Java Development Kit (JDK)
-- Install Apache Tomcat (Servlet Container)
-- Set up an IDE (Eclipse, IntelliJ, or VScode)
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-2. Create an HTML Login Form (login.html)
-This form collects the username and password from the user.
+@WebServlet("/UserAuthServlet")  // Mapping the Servlet
+public class UserAuthServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
-3. Create the Java Servlet to Process Login (LoginServlet.java)
-This servlet reads username and password from the request.
-It checks the credentials.
-- If valid, it displays a welcome message.
-- If invalid, it redirects back to the login page.
+    // Hardcoded credentials (for testing purposes)
+    private static final String VALID_USERNAME = "johndoe";
+    private static final String VALID_PASSWORD = "securePass123";
 
-4.  Configure web.xml
-5. Deploy and Run
-- Place the login.html file inside the WebContent (for VScode) or webapp (for Maven projects).
-- Compile and deploy the servlet in Tomcat.
-Access the form in your browser:
-http://localhost:8080/login.html
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
+        // Retrieving user input from the form
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        // Checking credentials
+        if (VALID_USERNAME.equals(username) && VALID_PASSWORD.equals(password)) {
+            out.println("<h2>Welcome, " + username + "!</h2>");
+            out.println("<p>Login Successful. Enjoy your session!</p>");
+        } else {
+            out.println("<h2>Invalid Username or Password!</h2>");
+            out.println("<p><a href='loginPage.html'>Try Again</a></p>");
+        }
+    }
+}
